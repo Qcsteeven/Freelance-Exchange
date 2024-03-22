@@ -1,3 +1,3 @@
 class Request:
-  def __init__():
-    pass
+    def __init__():
+        pass
