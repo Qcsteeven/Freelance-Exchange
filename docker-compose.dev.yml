@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:13-alpine
+    restart: unless-stopped
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - ${DATABASE_PATH}:/database
+      - ./config/database:/run/secrets
+    environment:
+      TZ: UTC-8
+      PGDATA: /database
+      POSTGRES_USER_FILE: /run/secrets/postgres-user
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-password

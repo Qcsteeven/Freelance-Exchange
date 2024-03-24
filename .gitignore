@@ -1,6 +1,7 @@
 # configs and scripts
-./config
-./package.json
+config/database
+package.json
+.env
 # Чувствительные данные
-./data/reserve
-./data/database
+data/reserve
+data/database
