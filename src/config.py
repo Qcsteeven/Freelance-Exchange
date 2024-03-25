@@ -12,11 +12,17 @@ class Config:
         load_dotenv(dotenv_path)
 
         try:
-            self.db_host = os.environ.get('DB_HOST')
-            self.db_port = int(os.environ.get('DB_PORT'))
-            self.db_user = os.environ.get('DB_USER')
-            self.db_password = os.environ.get('DB_PASSWORD')
-            self.db_name = os.environ.get('DB_NAME')
+            self.db_host = os.environ.get('DB_HOST').strip()
+            self.db_port = int(os.environ.get('DB_PORT').strip())
+            self.db_user = os.environ.get('DB_USER').strip()
+            self.db_password = os.environ.get('DB_PASSWORD').strip()
+            self.db_name = os.environ.get('DB_NAME').strip()
+
+            is_has1 = not self.db_host or not self.db_port or not self.db_user
+            is_has2 = not self.db_password or not self.db_name
+
+            if is_has1 or is_has2:
+                raise Exception('')
         except:
             raise Exception('Invalid .env file. It is necessary to fix errors and unspecified environment variables.')
 
