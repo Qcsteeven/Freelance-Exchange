@@ -7,13 +7,12 @@ services:
     restart: 'no'
     volumes:
       - ${DATABASE_PATH}:/database
-      - ./config/init:/docker-entrypoint-initdb.d/
-      - ./config/database:/run/secrets
+      - ./config/db-init:/docker-entrypoint-initdb.d/
     environment:
       TZ: UTC-8
-      POSTGRES_DB_FILE: /run/secrets/postgres-db
-      POSTGRES_USER_FILE: /run/secrets/postgres-user
-      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-password
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /database
       POSTGRES_HOST_AUTH_METHOD: scram-sha-256
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256 -E UTF8

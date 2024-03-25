@@ -5,3 +5,5 @@ package.json
 # Чувствительные данные
 data/reserve
 data/database
+# Кеш
+src/__pycache__
