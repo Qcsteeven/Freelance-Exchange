@@ -6,4 +6,4 @@ package.json
 data/reserve
 data/database
 # Кеш
-src/__pycache__
+**/__pycache__
