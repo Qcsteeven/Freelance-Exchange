@@ -1,4 +1,5 @@
-from interfaces import Response
+from http import HTTPStatus
+from .interfaces import Response, ResponseType
 
 
 class TmpController:
@@ -7,4 +8,4 @@ class TmpController:
         pass
 
     def tmp_method(self, body: str = 'TmpController().tmp_method()') -> Response:
-        return Response(type='http', body=body, status_code=200)
+        return Response(type=ResponseType.HTML, body=body, status_code=HTTPStatus.OK)

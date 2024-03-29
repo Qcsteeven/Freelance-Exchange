@@ -1,13 +1,19 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.client import HTTPException
 from http import HTTPStatus
+from typing import Callable
 from urllib.parse import urlparse
 import json
-from controllers.interfaces import Response
-from .simple_routes import simple_routes
+from .controllers.interfaces import Response, ResponseType
 
 
 class Web(BaseHTTPRequestHandler):
+
+    _simple_routes: Callable[[any], Response]
+
+    def __init__(self, simple_routes: Callable[[any], Response], *args, **kwargs):
+        self._simple_routes = simple_routes
+        super().__init__(*args, **kwargs)
 
     # pylint: disable=invalid-name
     def do_GET(self):
@@ -37,8 +43,8 @@ class Web(BaseHTTPRequestHandler):
         #query_params = parse_qs(parsed_url.query)
         response: None = None
 
-        if method == 'GET' and path in simple_routes:
-            response = simple_routes[path](self)
+        if method == 'GET' and path in self._simple_routes:
+            response = self._simple_routes[path](self)
 
         # if response == None:
         #     for route in routes:
@@ -53,7 +59,7 @@ class Web(BaseHTTPRequestHandler):
         #                 route.handle(result.groups)
 
         if response is None:
-            response = Response(type='http', body="", status_code=HTTPStatus.NOT_FOUND)
+            response = Response(type=ResponseType.HTML, body="", status_code=HTTPStatus.NOT_FOUND)
 
         self.send_from_controller_response(response)
 
@@ -64,17 +70,19 @@ class Web(BaseHTTPRequestHandler):
             self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR)
 
     def send_from_controller_response(self, response: Response):
-        if response.type == 'http':
-            self.send_response(response.status_code)
+        self.send_response(response.status_code)
+
+        if response.type == ResponseType.HTML:
             self.send_header('Content-Type', 'text/html')
             self.end_headers()
             self.wfile.write(response.body.encode())
-        elif response.type == 'json':
-            self.send_response(response.status_code)
+        elif response.type == ResponseType.JSON:
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
             self.wfile.write(json.dumps(response.body).encode())
 
-def start_server(server_port: int):
-    server = HTTPServer(('localhost', server_port), Web)
+def start_server(simple_routes: Callable[[Web], Response], server_port: int):
+    server_address = ('localhost', server_port)
+    init_web = lambda *args, **kwargs: Web(simple_routes, *args, **kwargs)
+    server = HTTPServer(server_address, init_web)
     server.serve_forever()
