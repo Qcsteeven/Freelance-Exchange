@@ -4,15 +4,17 @@ from customer import Customer
 from performer import Performer
 from order import Order
 
-
 @dataclass
 class Message:
     value: str
     date: datetime
     readed: bool
+    _chat: int
+    _owner: int
 
 
 class Chat:
+    _id: int | None
     def __init__(self):
         pass
 

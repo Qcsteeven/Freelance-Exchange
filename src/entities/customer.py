@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from rating import Rating
 from company import Company
 from order import Order
-
+from base import DataBaseStatus
 
 @dataclass
 class CustomerOptions:
@@ -11,11 +11,21 @@ class CustomerOptions:
 
 
 class Customer:
+    _db_status: DataBaseStatus
+    _id: int | None
+    _mail: str | None
+    _telephone: str | None
+    _first_name: str
+    _second_name: str | None
+    _company: Company | None
+    _rating: Rating
     def __init__(self):
         pass
 
     def create(self, options: CustomerOptions):
-        pass
+        self._first_name = options.firstName
+        self._second_name = options.secondName
+        self._db_status = DataBaseStatus.NEW
 
     def get_rating(self) -> Rating:
         pass

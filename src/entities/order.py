@@ -1,8 +1,11 @@
+import datetime
 from dataclasses import dataclass
 from customer import Customer
 from request import Request
 from company import Company
-
+from enum import Enum
+from chat import Chat
+from base import DataBaseStatus
 
 @dataclass
 class OrderOptions:
@@ -10,15 +13,36 @@ class OrderOptions:
     customer: Customer
     descriptions: str
 
+class OrderStatus(Enum):
+    ACTIVE = 'ACTIVE'
+    PROCESS = 'PROCESS'
+    CLOSE = 'CLOSE'
 
 class Order:
-    descriptions: str
+    _db_status: DataBaseStatus
+    _title: str
+    _descriptions: str
+    _id: int | None
+    _customer: int | Customer
+    _performer: int | None
+    _status: OrderStatus
+    _create: datetime
+    _start_process: datetime | None
+    _close: datetime | None
+    _category: str
+    _technology_stack: list[str]
+    _chat: Chat | None
+    _chats: list[Chat]
+
 
     def __init__(self):
         pass
 
     def create(self, options: OrderOptions):
-        pass
+        self._title = options.title
+        self._customer = options.customer
+        self._descriptions = options.descriptions
+        self._db_status = DataBaseStatus.NEW
 
     def close(self):
         pass
