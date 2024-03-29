@@ -66,9 +66,6 @@ class Web(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(response.body).encode())
 
-def run():
-    server = HTTPServer(('localhost', 5000), Web)
+def start_server(server_port: int):
+    server = HTTPServer(('localhost', server_port), Web)
     server.serve_forever()
-
-if __name__ == '__main__':
-    run()
