@@ -4,7 +4,7 @@ from http import HTTPStatus
 from urllib.parse import urlparse
 import json
 from controllers.interfaces import Response
-from patches import patches
+from .simple_routes import simple_routes
 
 
 class Web(BaseHTTPRequestHandler):
@@ -37,8 +37,8 @@ class Web(BaseHTTPRequestHandler):
         #query_params = parse_qs(parsed_url.query)
         response: None = None
 
-        if method == 'GET' and path in patches:
-            response = patches[path](self) # Response(type='http', body=patches[path], status_code=HTTPStatus.OK)
+        if method == 'GET' and path in simple_routes:
+            response = simple_routes[path](self)
 
         # if response == None:
         #     for route in routes:
