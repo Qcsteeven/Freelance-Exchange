@@ -1,10 +1,11 @@
 # configs and scripts
-.idea
 config/database
 package.json
 .env
+.idea
 # Чувствительные данные
 data/reserve
 data/database
 # Кеш
 **/__pycache__
+.venv

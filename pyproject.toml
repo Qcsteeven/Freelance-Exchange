@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "freelance-exchange"
+version = "0.1.0"
+description = ""
+authors = ["Qcsteeven <leva.demonov2005@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+psycopg = "~=3.1.18"
+psycopg-binary = "~=3.1.18"
+python-dotenv = "~=1.0.1"
+
+[tool.poetry.dev-dependencies]
+pylint = "^3.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
