@@ -1,53 +1,60 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.client import HTTPException
 from urllib.parse import urlparse#, parse_qs
-from response import Response
+from controllers.types import Response
 from http import HTTPStatus
 from patches import patches
 import json
 
 class Web(BaseHTTPRequestHandler):
     def do_GET(self):
+        handle_request('GET')
+
+    def do_POST(self):
+        handle_request('POST')
+    
+    def do_PUT(self):
+        handle_request('PUT')
+    
+    def do_DELETE(self):
+        handle_request('DELETE')
+    
+    def handle_request(self, method: str):
         try:
             parsed_url = urlparse(self.path)
-            #path = parsed_url.path
+            path = parsed_url.path
             #query_params = parse_qs(parsed_url.query)
-            if parsed_url.path in patches:
-                response = Response(type='http', body=patches[parsed_url.path], status_code=HTTPStatus.OK)
-            else:
+            response = None
+
+            if method == 'GET' and path in patches:
+                response = patches[path](self) # Response(type='http', body=patches[path], status_code=HTTPStatus.OK)
+
+            # if response == None:
+            #     for route in routes:
+            #         if route.method == method:
+            #         # {
+            #         #     method: str
+            #         #     regexp: regexp
+            #         #     handle: (self, groups) => Response
+            #         # }
+            #             result = route.regexp.test(path)
+            #             if result:
+            #                 route.handle(result.groups)
+
+            if response == None:
                 response = Response(type='http', body="", status_code=HTTPStatus.NOT_FOUND)
+
             self.send_from_controller_response(response)
         except HTTPException as e:
             self.handle_error(e)
 
-    def do_POST(self):
-        try:
-            response = Response(type='http', body="Hello, POST!", status_code=HTTPStatus.OK)
-            self.send_from_controller_response(response)
-        except HTTPException as e:
-            self.handle_error(e)
-    
-    def do_PUT(self):
-        try:
-            response = Response(type='http', body="Hello, PUT!", status_code=HTTPStatus.OK)
-            self.send_from_controller_response(response)
-        except HTTPException as e:
-            self.handle_error(e)
-    
-    def do_DELETE(self):
-        try:
-            response = Response(type='http', body="Hello, DELETE!", status_code=HTTPStatus.OK)
-            self.send_from_controller_response(response)
-        except HTTPException as e:
-            self.handle_error(e)
-        
     def handle_error(self, error):
         if isinstance(error, ValueError):
             self.send_error(HTTPStatus.BAD_REQUEST)
         else:
             self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR)
         
-    def send_from_controller_response(self, response):
+    def send_from_controller_response(self, response: Response):
         if response.type == 'http':
             self.send_response(response.status_code)
             self.send_header('Content-Type', 'text/html')

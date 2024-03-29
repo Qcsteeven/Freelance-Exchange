@@ -15,6 +15,8 @@ class Message:
 
 class Chat:
     _id: int | None
+    _message: str
+    
     def __init__(self):
         pass
 
