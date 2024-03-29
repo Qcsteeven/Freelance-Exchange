@@ -1,59 +1,68 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.client import HTTPException
-from urllib.parse import urlparse#, parse_qs
-from controllers.types import Response
 from http import HTTPStatus
-from patches import patches
+from urllib.parse import urlparse
 import json
+from controllers.interfaces import Response
+from patches import patches
+
 
 class Web(BaseHTTPRequestHandler):
-    def do_GET(self):
-        handle_request('GET')
 
+    # pylint: disable=invalid-name
+    def do_GET(self):
+        self.handle_request('GET')
+
+    # pylint: disable=invalid-name
     def do_POST(self):
-        handle_request('POST')
-    
+        self.handle_request('POST')
+
+    # pylint: disable=invalid-name
     def do_PUT(self):
-        handle_request('PUT')
-    
+        self.handle_request('PUT')
+
+    # pylint: disable=invalid-name
     def do_DELETE(self):
-        handle_request('DELETE')
-    
+        self.handle_request('DELETE')
+
     def handle_request(self, method: str):
         try:
-            parsed_url = urlparse(self.path)
-            path = parsed_url.path
-            #query_params = parse_qs(parsed_url.query)
-            response = None
-
-            if method == 'GET' and path in patches:
-                response = patches[path](self) # Response(type='http', body=patches[path], status_code=HTTPStatus.OK)
-
-            # if response == None:
-            #     for route in routes:
-            #         if route.method == method:
-            #         # {
-            #         #     method: str
-            #         #     regexp: regexp
-            #         #     handle: (self, groups) => Response
-            #         # }
-            #             result = route.regexp.test(path)
-            #             if result:
-            #                 route.handle(result.groups)
-
-            if response == None:
-                response = Response(type='http', body="", status_code=HTTPStatus.NOT_FOUND)
-
-            self.send_from_controller_response(response)
+            self.try_handle_request(method)
         except HTTPException as e:
             self.handle_error(e)
+
+    def try_handle_request(self, method: str):
+        parsed_url = urlparse(self.path)
+        path = parsed_url.path
+        #query_params = parse_qs(parsed_url.query)
+        response: None = None
+
+        if method == 'GET' and path in patches:
+            response = patches[path](self) # Response(type='http', body=patches[path], status_code=HTTPStatus.OK)
+
+        # if response == None:
+        #     for route in routes:
+        #         if route.method == method:
+        #         # {
+        #         #     method: str
+        #         #     regexp: regexp
+        #         #     handle: (self, groups) => Response
+        #         # }
+        #             result = route.regexp.test(path)
+        #             if result:
+        #                 route.handle(result.groups)
+
+        if response is None:
+            response = Response(type='http', body="", status_code=HTTPStatus.NOT_FOUND)
+
+        self.send_from_controller_response(response)
 
     def handle_error(self, error):
         if isinstance(error, ValueError):
             self.send_error(HTTPStatus.BAD_REQUEST)
         else:
             self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR)
-        
+
     def send_from_controller_response(self, response: Response):
         if response.type == 'http':
             self.send_response(response.status_code)

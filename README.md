@@ -13,7 +13,7 @@ poetry install
 
 ### Server configuration settings
 
-To configure the server, use the .env file
+To configure the server, use the .env file.
 
 The repository does not have all the settings and to start the server. You need to copy the .env.example template, and rename it to .env, then fill in the missing fields.
 
@@ -45,13 +45,13 @@ To run in development mode, you need to enable the database using docker.
 docker-compose -f docker-compose.dev.yml up
 ```
 
-Чтобы запустить сам сервер, используйте эту команду
+To start the server, use this command.
 
 ```bash
 python src/main.py
 ```
 
-After work you need to shut down the database
+After work you need to shut down the database.
 
 ```bash
 docker-compose -f docker-compose.dev.yml down
