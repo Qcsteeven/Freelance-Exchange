@@ -1,5 +1,11 @@
+from companies_table import CompaniesTable
+from profiles_table import ProfilesTable
+from requests_table import RequestsTable
 from ..storage_core import StorageCore
 
 class UsersTable:
-    def __init__(self, core: StorageCore):
+    def __init__(self, core: StorageCore, profiles: ProfilesTable, companies: CompaniesTable, requests: RequestsTable):
         self.db = core
+        self.profiles = profiles
+        self.companies = companies
+        self.requests = requests
