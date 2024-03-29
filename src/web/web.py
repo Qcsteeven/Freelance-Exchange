@@ -1,27 +1,19 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.client import HTTPException
-from urllib.parse import urlparse, parse_qs
-from dataclasses import dataclass
+from urllib.parse import urlparse#, parse_qs
+from response import Response
 from http import HTTPStatus
 from patches import patches
 import json
 
-
-@dataclass
-class Response:
-    type: str
-    body: str
-    status_code: int
-
 class Web(BaseHTTPRequestHandler):
-    # определяем метод `do_GET` 
     def do_GET(self):
         try:
             parsed_url = urlparse(self.path)
-            path = parsed_url.path
-            query_params = parse_qs(parsed_url.query)
-            if path in patches:
-                response = Response(type='http', body=patches[path], status_code=HTTPStatus.OK)
+            #path = parsed_url.path
+            #query_params = parse_qs(parsed_url.query)
+            if parsed_url.path in patches:
+                response = Response(type='http', body=patches[parsed_url.path], status_code=HTTPStatus.OK)
             else:
                 response = Response(type='http', body="", status_code=HTTPStatus.NOT_FOUND)
             self.send_from_controller_response(response)
@@ -54,7 +46,6 @@ class Web(BaseHTTPRequestHandler):
             self.send_error(HTTPStatus.BAD_REQUEST)
         else:
             self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR)
-        
         
     def send_from_controller_response(self, response):
         if response.type == 'http':
