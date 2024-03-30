@@ -1,19 +1,21 @@
-import cgi
-from typing import Optional, Dict, Any, Callable
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.client import HTTPException
 from http import HTTPStatus
+from typing import Optional, Dict, Any
 from urllib.parse import urlparse
 import json
+import cgi
+from .interface import SimpleRoute, RegexpRoute
 from .controllers.interfaces import Response, ResponseType
 
 
 class Web(BaseHTTPRequestHandler):
+    _simple_routes: dict[str, SimpleRoute]
+    _regexp_routes: list[RegexpRoute]
 
-    _simple_routes: Callable[[any], Response]
-
-    def __init__(self, simple_routes: Callable[[any], Response], *args, **kwargs):
+    def __init__(self, simple_routes: dict[str, SimpleRoute], regexp_routes: list[RegexpRoute], *args, **kwargs):
         self._simple_routes = simple_routes
+        self._regexp_routes = regexp_routes
         super().__init__(*args, **kwargs)
 
     # pylint: disable=invalid-name
@@ -42,23 +44,21 @@ class Web(BaseHTTPRequestHandler):
         parsed_url = urlparse(self.path)
         path = parsed_url.path
         #query_params = parse_qs(parsed_url.query)
-        response: None = None
+        response: None | Response = None
 
-        if method == 'GET' and path in self._simple_routes:
-            response = self._simple_routes[path](self)
+        # Simple Route
+        if path in self._simple_routes and method in self._simple_routes[path].methods:
+            response = self._simple_routes[path].handle(self)
 
-        # if response == None:
-        #     for route in routes:
-        #         if route.method == method:
-        #         # {
-        #         #     method: str
-        #         #     regexp: regexp
-        #         #     handle: (self, groups) => Response
-        #         # }
-        #             result = route.regexp.test(path)
-        #             if result:
-        #                 route.handle(result.groups)
+        # Regexp Route
+        if response is None:
+            for route in self._regexp_routes:
+                if method in route.methods:
+                    result = route.regexp.match(path)
+                    if not result is None:
+                        response = route.handle(self, result)
 
+        # error 404
         if response is None:
             response = Response(type=ResponseType.HTML, body="", status_code=HTTPStatus.NOT_FOUND)
 
@@ -72,7 +72,6 @@ class Web(BaseHTTPRequestHandler):
 
     def try_get_body(self) -> Optional[Dict[str, Any]]:
         content_type = self.headers.get('Content-Type')
-        print(content_type)
 
         if content_type:
             if content_type.startswith('application/json'):
@@ -90,6 +89,8 @@ class Web(BaseHTTPRequestHandler):
     def parse_multipart_form_data(self) -> Dict[str, Any]:
         form = cgi.FieldStorage(fp=self.rfile, headers=self.headers, environ={'REQUEST_METHOD': 'POST'})
         parsed_body = {}
+
+        # pylint: disable=unused-variable
         for field, value in form.items():
             if isinstance(form[field], cgi.FieldStorage):
                 parsed_body[field] = form[field].file.read()
@@ -115,8 +116,8 @@ class Web(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(response.body).encode())
 
-def start_server(simple_routes: Callable[[Web], Response], server_port: int):
+def start_server(simple_routes: dict[str, SimpleRoute], regexp_routes: list[RegexpRoute], server_port: int):
     server_address = ('localhost', server_port)
-    init_web = lambda *args, **kwargs: Web(simple_routes, *args, **kwargs)
+    init_web = lambda *args, **kwargs: Web(simple_routes, regexp_routes, *args, **kwargs)
     server = HTTPServer(server_address, init_web)
     server.serve_forever()
