@@ -3,7 +3,7 @@ from typing import Callable
 from .controllers.tmp_controller import TmpController
 from .controllers.interfaces import Response, ResponseType
 from .pages.tmp import TmpPage
-from .web import Web
+from .server import Web
 
 
 simple_routes: dict[str, Callable[[Web], Response]] = {

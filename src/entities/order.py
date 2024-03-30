@@ -1,9 +1,9 @@
-import datetime
+from enum import Enum
+from datetime import datetime
 from dataclasses import dataclass
 from customer import Customer
 from request import Request
 from company import Company
-from enum import Enum
 from chat import Chat
 from base import DataBaseStatus
 

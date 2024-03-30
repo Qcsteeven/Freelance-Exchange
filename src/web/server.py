@@ -1,7 +1,8 @@
+import cgi
+from typing import Optional, Dict, Any, Callable
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.client import HTTPException
 from http import HTTPStatus
-from typing import Callable
 from urllib.parse import urlparse
 import json
 from .controllers.interfaces import Response, ResponseType
@@ -62,6 +63,39 @@ class Web(BaseHTTPRequestHandler):
             response = Response(type=ResponseType.HTML, body="", status_code=HTTPStatus.NOT_FOUND)
 
         self.send_from_controller_response(response)
+
+    def get_body(self) -> Optional[Dict[str, Any]]:
+        try:
+            return self.try_get_body()
+        except Exception as e:
+            raise HTTPException() from e
+
+    def try_get_body(self) -> Optional[Dict[str, Any]]:
+        content_type = self.headers.get('Content-Type')
+        print(content_type)
+
+        if content_type:
+            if content_type.startswith('application/json'):
+                body = self.get_raw_body()
+                return json.loads(body)
+            elif content_type.startswith('multipart/form-data'):
+                parsed_body = self.parse_multipart_form_data()
+                return parsed_body
+        return None
+
+    def get_raw_body(self) -> str:
+        content_length = int(self.headers.get('Content-Length', 0))
+        return self.rfile.read(content_length).decode()
+
+    def parse_multipart_form_data(self) -> Dict[str, Any]:
+        form = cgi.FieldStorage(fp=self.rfile, headers=self.headers, environ={'REQUEST_METHOD': 'POST'})
+        parsed_body = {}
+        for field, value in form.items():
+            if isinstance(form[field], cgi.FieldStorage):
+                parsed_body[field] = form[field].file.read()
+            else:
+                parsed_body[field] = form[field].value 
+        return parsed_body
 
     def handle_error(self, error):
         if isinstance(error, ValueError):

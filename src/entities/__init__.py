@@ -6,4 +6,5 @@ from performer import Performer
 from rating import Rating
 from request import Request
 
-__all__ = ['Chat', 'Company', 'Customer', 'Order', 'Performer', 'Rating', 'Request']
+__all__ = ['Chat', 'Company', 'Customer',
+           'Order', 'Performer', 'Rating', 'Request']

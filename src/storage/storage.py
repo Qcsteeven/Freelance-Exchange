@@ -1,3 +1,4 @@
+from storage_core import StorageCore
 from modules.companies_table import CompaniesTable
 from modules.contacts_table import ContactsTable
 from modules.sessions_table import SessionsTable
@@ -5,7 +6,6 @@ from modules.profiles_table import ProfilesTable
 from modules.requests_table import RequestsTable
 from modules.orders_table import OrdersTable
 from modules.users_table import UsersTable
-from storage_core import StorageCore
 
 class Storage:
     _contacts: ContactsTable

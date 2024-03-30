@@ -1,4 +1,6 @@
 from enum import Enum
+
+
 class DataBaseStatus(Enum):
     NEW = 1
     UPDATED = 2

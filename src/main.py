@@ -1,5 +1,5 @@
 from config import Config
-from web.web import start_server
+from web.server import start_server
 from web.simple_routes import simple_routes
 
 
