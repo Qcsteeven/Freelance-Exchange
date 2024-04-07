@@ -5,7 +5,7 @@ from typing import Optional, Dict, Any
 from urllib.parse import urlparse
 import json
 import cgi
-from .interface import SimpleRoute, RegexpRoute
+from .routes.interface import SimpleRoute, RegexpRoute
 from .controllers.interfaces import Response, ResponseType
 
 

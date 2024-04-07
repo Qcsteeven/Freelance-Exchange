@@ -3,7 +3,6 @@ import psycopg
 
 # Данный класс является singleton
 class StorageCore:
-
     _instance = None
     _select_connection: psycopg.Connection
     _connection_url: str

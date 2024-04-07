@@ -1,7 +1,7 @@
 from typing import TypeVar, Generic
 from re import Match, Pattern
 from abc import ABC, abstractmethod
-from .controllers.interfaces import Response
+from ..controllers.interfaces import Response
 
 
 Request = TypeVar('Request')
