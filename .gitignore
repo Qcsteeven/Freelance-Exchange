@@ -12,4 +12,5 @@ data/database
 # Кеш
 **/__pycache__
 .venv
+.mypy_cache
 node_modules
