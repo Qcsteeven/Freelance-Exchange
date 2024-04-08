@@ -1,7 +1,7 @@
-from project.storage import Storage
+from storage import Storage
 
 
-class PerformerController:
+class OrdersController:
     storage: Storage
 
     def __init__(self, storage: Storage):

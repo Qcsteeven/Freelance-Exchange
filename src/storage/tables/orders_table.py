@@ -1,6 +1,6 @@
-from requests_table import RequestsTable
-from users_table import UsersTable
 from ..storage_core import StorageCore
+from .requests_table import RequestsTable
+from .users_table import UsersTable
 
 
 class OrdersTable:

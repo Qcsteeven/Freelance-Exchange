@@ -1,8 +1,8 @@
 from http import HTTPStatus
 from re import Match, compile as regexp_compile
+from web.controllers import Response, ResponseType
+from web.server import Web
 from .interface import RegexpRoute
-from ..controllers.interfaces import Response, ResponseType
-from ..server import Web
 
 
 # regexp example
@@ -14,7 +14,7 @@ class TmpMatch(RegexpRoute):
 
     def handle(self, req: Web, match: Match):
         something_text: str = match.group('something_text')
-        body = 'Не робит' # req.get_body()
+        body = req.get_body()
         return Response(
             type=ResponseType.HTML,
             body=f'path: {req.path}\nmatched: {something_text}\nbody: {body}',

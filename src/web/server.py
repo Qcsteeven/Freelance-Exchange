@@ -1,12 +1,12 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from http.client import HTTPException
 from http import HTTPStatus
-from typing import Optional, Dict, Any
 from urllib.parse import urlparse
+from typing import Any
 import json
 import cgi
-from .routes.interface import SimpleRoute, RegexpRoute
-from .controllers.interfaces import Response, ResponseType
+from web.routes.interface import SimpleRoute, RegexpRoute
+from web.controllers import Response, ResponseType
 
 
 class Web(BaseHTTPRequestHandler):
@@ -64,13 +64,13 @@ class Web(BaseHTTPRequestHandler):
 
         self.send_from_controller_response(response)
 
-    def get_body(self) -> Optional[Dict[str, Any]]:
+    def get_body(self) -> dict[str, Any] | None:
         try:
             return self.try_get_body()
         except Exception as e:
             raise HTTPException() from e
 
-    def try_get_body(self) -> Optional[Dict[str, Any]]:
+    def try_get_body(self) -> dict[str, Any] | None:
         content_type = self.headers.get('Content-Type')
 
         if content_type:
@@ -78,6 +78,7 @@ class Web(BaseHTTPRequestHandler):
                 body = self.get_raw_body()
                 return json.loads(body)
             elif content_type.startswith('multipart/form-data'):
+
                 parsed_body = self.parse_multipart_form_data()
                 return parsed_body
         return None
@@ -86,16 +87,16 @@ class Web(BaseHTTPRequestHandler):
         content_length = int(self.headers.get('Content-Length', 0))
         return self.rfile.read(content_length).decode()
 
-    def parse_multipart_form_data(self) -> Dict[str, Any]:
+    def parse_multipart_form_data(self) -> dict[str, Any]:
         form = cgi.FieldStorage(fp=self.rfile, headers=self.headers, environ={'REQUEST_METHOD': 'POST'})
         parsed_body = {}
 
-        # pylint: disable=unused-variable
-        for field, value in form.items():
+        # pylint: disable=consider-using-dict-items
+        for field in form.keys():
             if isinstance(form[field], cgi.FieldStorage):
                 parsed_body[field] = form[field].file.read()
             else:
-                parsed_body[field] = form[field].value 
+                parsed_body[field] = form[field].value
         return parsed_body
 
     def handle_error(self, error):

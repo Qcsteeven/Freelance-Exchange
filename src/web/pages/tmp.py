@@ -1,6 +1,6 @@
 class TmpPage:
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     def generate(self, name: str) -> str:

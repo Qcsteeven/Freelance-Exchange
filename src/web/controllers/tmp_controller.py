@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from project.storage import Storage
+from storage import Storage
 from .interfaces import Response, ResponseType
 
 
