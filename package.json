@@ -1,0 +1,22 @@
+{
+  "name": "scripts",
+  "scripts": {
+    "py:install": "python -m venv .venv && pip install poetry && echo exit | poetry shell && poetry install",
+    "start": "python src/main.py",
+
+    "db:init": "docker-compose -f dc-init.yml up",
+    "db:create-reserve": "docker-compose -f dc-reserve.yml up",
+    "db:init-from-reserve": "docker-compose -f dc-init-from-reserve.yml up",
+    "db:start": "docker-compose -f docker-compose.dev.yml up",
+    "db:clear": "docker-compose -f docker-compose.dev.yml down",
+    "db:delete": "npm run db:clear && rm -rf data/database",
+
+    "lint": "mypy --config-file mypy.ini src/main.py",
+
+    "copy-test": "npx jscpd --ignore \"**/database/**,**/.venv/**,**/report/**,**/node_modules/**,**/installer/**,**/* copy/**,**/log/**,**/logs/**,**/*.svg,**/dist/**\" -r html .",
+    "copy-test-in-markdown": "npx jscpd --ignore \"**/database/**,**/.venv/**,**/report/**,**/node_modules/**,**/installer/**,**/* copy/**,**/log/**,**/logs/**,**/*.svg,**/dist/**\" -r markdown ."
+  },
+  "devDependencies": {
+    "jscpd": "^3.4.5"
+  }
+}

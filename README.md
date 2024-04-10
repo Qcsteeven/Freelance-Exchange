@@ -11,6 +11,12 @@ poetry shell
 poetry install
 ```
 
+If you have Node.js you can do this in one command
+
+```bash
+npm run py:install
+```
+
 ### Server configuration settings
 
 To configure the server, use the .env file.
@@ -56,3 +62,20 @@ After work you need to shut down the database.
 ```bash
 docker-compose -f docker-compose.dev.yml down
 ```
+
+## Scripts
+
+Create scripts for convenience, but you must have Node.js to use them. All commands can be viewed in the package.json file
+
+## Backup database
+
+To backup the database, you can use the commands
+
+```bash
+docker-compose -f dc-reserve.yml up
+docker-compose -f dc-init-reserve.yml up
+```
+
+The first command creates a backup copy of the database in data/reserve/, the second command creates a database from the backup copy from data/reserve/.
+
+If you already have a database and want to restore from a backup, delete the current database. It is recommended to use scripts from the package.json file for all commands.

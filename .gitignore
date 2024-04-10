@@ -1,7 +1,5 @@
 # configs and scripts
 config/database
-package.json
-package-lock.json
 .env
 .idea
 src/tmp.py
