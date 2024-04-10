@@ -1,12 +1,12 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from http.client import HTTPException
 from http import HTTPStatus
 from urllib.parse import urlparse
 from typing import Any
 import json
 import cgi
+from web.exceptions import ResponseException, BadRequest
 from web.routes.interface import SimpleRoute, RegexpRoute
-from web.controllers import Response, ResponseType
+from web.controllers import ResponseHTML, ResponseJSON
 
 
 class Web(BaseHTTPRequestHandler):
@@ -37,30 +37,31 @@ class Web(BaseHTTPRequestHandler):
     def handle_request(self, method: str):
         try:
             self.try_handle_request(method)
-        except HTTPException as e:
+        # pylint: disable=broad-exception-caught
+        except Exception as e:
             self.handle_error(e)
 
     def try_handle_request(self, method: str):
         parsed_url = urlparse(self.path)
         path = parsed_url.path
         #query_params = parse_qs(parsed_url.query)
-        response: None | Response = None
+        response: None | ResponseHTML | ResponseJSON = None
 
         # Simple Route
         if path in self._simple_routes and method in self._simple_routes[path].methods:
-            response = self._simple_routes[path].handle(self)
+            response = self._simple_routes[path].handle(self, method)
 
         # Regexp Route
         if response is None:
             for route in self._regexp_routes:
                 if method in route.methods:
-                    result = route.regexp.match(path)
-                    if not result is None:
-                        response = route.handle(self, result)
+                    match = route.regexp.match(path)
+                    if not match is None:
+                        response = route.handle(self, match, method)
 
         # error 404
         if response is None:
-            response = Response(type=ResponseType.HTML, body="", status_code=HTTPStatus.NOT_FOUND)
+            raise BadRequest()
 
         self.send_from_controller_response(response)
 
@@ -68,7 +69,7 @@ class Web(BaseHTTPRequestHandler):
         try:
             return self.try_get_body()
         except Exception as e:
-            raise HTTPException() from e
+            raise BadRequest() from e
 
     def try_get_body(self) -> dict[str, Any] | None:
         content_type = self.headers.get('Content-Type')
@@ -99,22 +100,20 @@ class Web(BaseHTTPRequestHandler):
                 parsed_body[field] = form[field].value
         return parsed_body
 
-    def handle_error(self, error):
-        if isinstance(error, ValueError):
-            self.send_error(HTTPStatus.BAD_REQUEST)
+    def handle_error(self, error: Exception):
+        if isinstance(error, ResponseException):
+            self.send_error(error.code, error.message)
         else:
             self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    def send_from_controller_response(self, response: Response):
-        self.send_response(response.status_code)
+    def send_from_controller_response(self, response: ResponseHTML | ResponseJSON):
+        self.send_response(response.code)
+        self.send_header('Content-Type', response.type)
+        self.end_headers()
 
-        if response.type == ResponseType.HTML:
-            self.send_header('Content-Type', 'text/html')
-            self.end_headers()
+        if isinstance(response, ResponseHTML):
             self.wfile.write(response.body.encode())
-        elif response.type == ResponseType.JSON:
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
+        elif isinstance(response, ResponseJSON):
             self.wfile.write(json.dumps(response.body).encode())
 
 def start_server(simple_routes: dict[str, SimpleRoute], regexp_routes: list[RegexpRoute], server_port: int):

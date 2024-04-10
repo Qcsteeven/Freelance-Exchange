@@ -1,12 +1,20 @@
 from dataclasses import dataclass
-from enum import Enum
-
-class ResponseType(Enum):
-    HTML = 'text/html'
-    JSON = 'application/json'
+from typing import Any
 
 @dataclass
 class Response:
-    type: ResponseType
+    body: Any
+    type: str = ''
+    code: int = 200
+
+@dataclass
+class ResponseHTML(Response):
     body: str
-    status_code: int
+    type = 'text/html'
+    code: int = 200
+
+@dataclass
+class ResponseJSON:
+    body: dict | tuple | list | int | str
+    type = 'application/json'
+    code: int = 200

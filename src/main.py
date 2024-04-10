@@ -2,7 +2,7 @@ from config import Config
 from storage import Storage
 from web.routes import get_simple_routes, get_regexp_routes, SimpleRoutesDependencies, RegexpRoutesDependencies
 from web.server import start_server
-from web.controllers import TmpController
+from web.controllers import TmpController, TmpDatabaseController
 from web.pages import TmpPage
 #, OrdersController, CustomerController, PerformerController
 
@@ -10,11 +10,14 @@ from web.pages import TmpPage
 def get_controllers_for_simple_routes(storage: Storage) -> SimpleRoutesDependencies:
     return SimpleRoutesDependencies(
         tmp_controller=TmpController(storage),
-        tmp_page=TmpPage()
+        tmp_page=TmpPage(),
+        tmp_database_controller=TmpDatabaseController(storage)
     )
 
 def get_controllers_for_regexp_routes(storage: Storage) -> RegexpRoutesDependencies:
-    return RegexpRoutesDependencies()
+    return RegexpRoutesDependencies(
+        tmp_database_controller=TmpDatabaseController(storage)
+    )
 
 def main():
     config = Config()

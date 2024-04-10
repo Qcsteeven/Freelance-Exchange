@@ -1,3 +1,4 @@
+from psycopg.rows import dict_row
 import psycopg
 
 
@@ -9,7 +10,7 @@ class StorageCore:
 
     def __init__(self, connection_url: str):
         self._connection_url = connection_url
-        self._select_connection = psycopg.connect(connection_url, autocommit=True)
+        self._select_connection = psycopg.connect(connection_url, autocommit=True, row_factory=dict_row)
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -19,5 +20,8 @@ class StorageCore:
     def get_select_connection(self) -> psycopg.Connection:
         return self._select_connection
 
+    def get_select_cursor(self) -> psycopg.Cursor:
+        return self._select_connection.cursor()
+
     def get_connection(self) -> psycopg.Connection:
-        return psycopg.connect(self._connection_url)
+        return psycopg.connect(self._connection_url, row_factory=dict_row)
