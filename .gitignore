@@ -12,3 +12,5 @@ data/database
 .venv
 .mypy_cache
 node_modules
+# Костыли
+*_old.py
