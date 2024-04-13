@@ -10,7 +10,7 @@ CREATE TABLE contacts (
 
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
-	profiles integer REFERENCES users ON DELETE RESTRICT,
+	profiles integer REFERENCES profiles ON DELETE RESTRICT,
 	is_customer boolean
 );
 

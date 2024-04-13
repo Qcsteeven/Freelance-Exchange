@@ -7,8 +7,10 @@ from ..exceptions import StorageException
 TableInfoDict = TypeVar('TableInfoDict')
 TableInfoTransformedDict = TypeVar('TableInfoTransformedDict')
 TableRowDict = TypeVar('TableRowDict')
+# have keys where and order
+TableFilterDict = TypeVar('TableFilterDict')
 
-class Table(ABC, Generic[TableInfoDict, TableInfoTransformedDict, TableRowDict]):
+class Table(ABC, Generic[TableInfoDict, TableInfoTransformedDict, TableRowDict, TableFilterDict]):
     _db: StorageCore
     _table: str
     _properties: list[str]
@@ -17,18 +19,22 @@ class Table(ABC, Generic[TableInfoDict, TableInfoTransformedDict, TableRowDict])
     def __init__(self, core: StorageCore):
         self._db = core
 
-    def select_raw(self) -> str:
-        return f'SELECT {self._get_all_properties()} FROM {self._table}'
-
-    def select(self) -> list[TableRowDict]:
+    def select(self, query_filter: TableFilterDict | None) -> list[TableRowDict]:
         with self._db.get_select_cursor() as cursor:
-            cursor.execute(self.select_raw())
+            cursor.execute(self._get_select_sql(query_filter))
             return cursor.fetchall()
 
     def select_one(self, identifier: int) -> None | TableRowDict:
+        sql = self._get_select_sql({'where': self._id + '=%s'})
         with self._db.get_select_cursor() as cursor:
-            cursor.execute(f'{self.select_raw()} WHERE {self._id}=%s', [identifier])
+            cursor.execute(sql, [identifier])
             return cursor.fetchone()
+
+    def _get_select_sql(self, query_filter: TableFilterDict | None) -> str:
+        all_properties = self._get_all_properties()
+        filter_fragment = self._get_filter_fragment(query_filter)
+        join_fragment = self._get_join_fragment()
+        return f'SELECT {all_properties} FROM {self._table} {join_fragment} {filter_fragment}'
 
     def insert(self, info: TableInfoDict) -> TableRowDict:
         with self._db.get_connection() as connection:
@@ -80,6 +86,23 @@ class Table(ABC, Generic[TableInfoDict, TableInfoTransformedDict, TableRowDict])
 
     def _get_values_fragment(self) -> str:
         return ', '.join(['%s'] * len(self._properties))
+
+    def _get_filter_fragment(self, query_filter: TableFilterDict | None) -> str:
+        sql_filter = ''
+
+        if query_filter is None:
+            return sql_filter
+
+        if isinstance(query_filter['where'], str):
+            sql_filter += f'WHERE {query_filter['where']} '
+        if isinstance(query_filter['order'], str):
+            sql_filter += f'ORDER BY {query_filter['order']} '
+
+        return sql_filter
+
+    # may be overridden
+    def _get_join_fragment(self) -> str:
+        return ''
 
     @abstractmethod
     def _insert_before(self, con: Connection, info: TableInfoDict) -> TableInfoTransformedDict:

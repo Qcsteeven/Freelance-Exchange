@@ -65,7 +65,7 @@ docker-compose -f docker-compose.dev.yml down
 
 ## Scripts
 
-Create scripts for convenience, but you must have Node.js to use them. All commands can be viewed in the package.json file
+Created scripts for convenience, but you must have Node.js to use them. All commands can be viewed in the package.json file
 
 ## Backup database
 
