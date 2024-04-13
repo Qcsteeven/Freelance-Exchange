@@ -27,13 +27,19 @@ class ProfileRow(TypedDict):
     skills: list[str]
 
 class ProfilesTable(Table[ProfileInfo, ProfileInfoTransformed, ProfileRow]):
-    _table = 'profiles'
+    table = 'profiles'
     _properties = ['contacts', 'first_name', 'second_name', 'skills']
     _id = 'id'
 
     def __init__(self, core: StorageCore, contacts: ContactsTable):
-        self.db = core
+        self._db = core
         self.contacts = contacts
+
+    def _get_join_fragment(self) -> str:
+        return f'LEFT JOIN {self.contacts.table} ON {self.contacts.table}.id={self.table}.contacts'
+
+    def _get_join_properties(self) -> str:
+        return f'{self.contacts.table}.email email, {self.contacts.table}.telephone telephone'
 
     def _insert_before(self, con: Connection, info: ProfileInfo) -> ProfileInfoTransformed:
         contact = self.contacts.insert_with_con(

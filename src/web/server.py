@@ -39,6 +39,7 @@ class Web(BaseHTTPRequestHandler):
             self.try_handle_request(method)
         # pylint: disable=broad-exception-caught
         except Exception as e:
+            print(e)
             self.handle_error(e)
 
     def try_handle_request(self, method: str):

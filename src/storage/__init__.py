@@ -9,6 +9,8 @@ from .tables.users_table import UsersTable
 
 class Storage:
     _contacts: ContactsTable
+    _profiles: ProfilesTable
+    _companies: CompaniesTable
     _sessions: SessionsTable
     _orders: OrdersTable
 
@@ -22,6 +24,14 @@ class Storage:
         users = UsersTable(core, profiles, companies, requests)
         self._orders = OrdersTable(core, requests, users)
         self._contacts = contacts
+        self._profiles = profiles
+        self._companies = companies
 
     def get_contacts_table(self):
         return self._contacts
+
+    def get_profiles_table(self):
+        return self._profiles
+
+    def get_companies_table(self):
+        return self._companies

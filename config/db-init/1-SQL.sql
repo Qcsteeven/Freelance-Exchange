@@ -8,6 +8,14 @@ CREATE TABLE contacts (
 	telephone text NULL
 );
 
+CREATE TABLE profiles (
+	id SERIAL PRIMARY KEY,
+	contacts integer REFERENCES contacts ON DELETE RESTRICT,
+	first_name text,
+	second_name text NULL,
+	skills text[]
+);
+
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
 	profiles integer REFERENCES profiles ON DELETE RESTRICT,
@@ -18,14 +26,6 @@ CREATE TABLE sessions (
 	id SERIAL PRIMARY KEY,
 	owner integer REFERENCES users ON DELETE RESTRICT,
 	key text
-);
-
-CREATE TABLE profiles (
-	id SERIAL PRIMARY KEY,
-	contacts integer REFERENCES contacts ON DELETE RESTRICT,
-	first_name text,
-	second_name text NULL,
-	skills text[]
 );
 
 CREATE TABLE companies (

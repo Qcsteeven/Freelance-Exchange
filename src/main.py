@@ -11,7 +11,6 @@ def get_controllers_for_simple_routes(storage: Storage) -> SimpleRoutesDependenc
     return SimpleRoutesDependencies(
         tmp_controller=TmpController(storage),
         tmp_page=TmpPage(),
-        tmp_database_controller=TmpDatabaseController(storage)
     )
 
 def get_controllers_for_regexp_routes(storage: Storage) -> RegexpRoutesDependencies:

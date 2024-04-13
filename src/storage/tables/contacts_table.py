@@ -12,7 +12,7 @@ class ContactRow(TypedDict):
     telephone: str | None
 
 class ContactsTable(Table[ContactInfo, ContactInfo, ContactRow]):
-    _table = 'contacts'
+    table = 'contacts'
     _properties = ['email', 'telephone']
     _id = 'id'
 
