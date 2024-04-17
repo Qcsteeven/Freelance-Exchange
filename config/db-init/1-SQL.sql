@@ -18,7 +18,7 @@ CREATE TABLE profiles (
 
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
-	profiles integer REFERENCES profiles ON DELETE RESTRICT,
+	profile integer REFERENCES profiles ON DELETE RESTRICT,
 	is_customer boolean
 );
 
