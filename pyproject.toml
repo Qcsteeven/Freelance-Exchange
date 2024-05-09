@@ -11,6 +11,7 @@ psycopg = "~=3.1.18"
 psycopg-binary = "~=3.1.17"
 python-dotenv = "~=1.0.1"
 multipledispatch = "^1.0.0"
+pydantic = "^2.7.1"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.9.0"

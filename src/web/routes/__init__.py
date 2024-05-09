@@ -5,6 +5,7 @@ from .interface import SimpleRoute, RegexpRoute
 from .tmp_simple_routes import TmpOne, TmpTwo, TmpThree
 from .tmp_regexp_routes import TmpMatch
 from .tmp_database_routes import ContactRootRoute, ContactIdRoute
+from .profile import ChangeCoustomerProfileInfo
 
 
 class SimpleRoutesDependencies(NamedTuple):
@@ -18,7 +19,8 @@ def get_simple_routes(dependencies: SimpleRoutesDependencies) -> dict[str, Simpl
         TmpOne(dependencies.tmp_controller),
         TmpTwo(dependencies.tmp_page),
         TmpThree(dependencies.tmp_page),
-        ContactRootRoute(dependencies.tmp_database_controller)
+        ContactRootRoute(dependencies.tmp_database_controller),
+        ChangeCoustomerProfileInfo()
     ]
 
     for route in simple_routes_array:
