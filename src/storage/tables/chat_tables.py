@@ -35,5 +35,5 @@ class ChatsTable(Table[ChatInfo, ChatInfoTransformed, ChatRow]):
     def _get_values(self, info: ChatInfoTransformed) -> list[Any]:
         return [info['performer'], info['order_link']]
 
-    def _get_zero_row(self) -> ChatRow:
-        return ChatRow(id = 0, performer=0, order_link=0)
+    def _get_zero_row(self) -> ChatInfoTransformed:
+        return ChatInfoTransformed(performer=0, order_link=0)

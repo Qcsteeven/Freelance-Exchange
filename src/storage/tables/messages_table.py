@@ -46,9 +46,8 @@ class MessagesTable(Table[MessageInfo, MessageInfoTransformed, MessageRow]):
     def _get_values(self, info: MessageInfoTransformed) -> list[Any]:
         return [info['chat'], info['owner'], info['date'], info['value']]
 
-    def _get_zero_row(self) -> MessageRow:
-        return MessageRow(
-            id = 0,
+    def _get_zero_row(self) -> MessageInfoTransformed:
+        return MessageInfoTransformed(
             chat=0,
             owner=0,
             date=datetime(year=2010, month=1, day=1),

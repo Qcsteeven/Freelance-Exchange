@@ -16,6 +16,7 @@ CREATE TABLE users (
 CREATE TABLE sessions (
 	id SERIAL PRIMARY KEY,
 	owner integer REFERENCES users ON DELETE CASCADE,
+	create_date timestamp,
 	key text
 );
 
@@ -49,6 +50,12 @@ CREATE TABLE orders (
 	description text,
 	technology_stack text[]
 );
+
+CREATE TABLE requests (
+	id SERIAL PRIMARY KEY,
+	performer integer REFERENCES users ON DELETE CASCADE,
+	order_link integer REFERENCES orders ON DELETE CASCADE
+)
 
 CREATE TABLE chats (
 	id SERIAL PRIMARY KEY,
