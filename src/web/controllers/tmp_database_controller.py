@@ -12,37 +12,38 @@ class TmpDatabaseController:
         self.storage = storage
 
         self.tables = {
+            'users': storage.get_users_table(),
             'contacts': storage.get_contacts_table(),
             'profiles': storage.get_profiles_table(),
             'companies': storage.get_companies_table()
         }
 
     def select_one(self, table: str, identifier: int):
-        table_instance = self.tables[table]
-        if not table_instance:
+        table_instance = self.tables.get(table)
+        if table_instance is None:
             raise NotFound()
         return ResponseJSON(body=table_instance.select_one(identifier))
 
     def select_all(self, table: str):
-        table_instance = self.tables[table]
-        if not table_instance:
+        table_instance = self.tables.get(table)
+        if table_instance is None:
             raise NotFound()
         return ResponseJSON(body=table_instance.select())
 
     def insert(self, table: str, info: TableInfoDict):
-        table_instance = self.tables[table]
-        if not table_instance:
+        table_instance = self.tables.get(table)
+        if table_instance is None:
             raise NotFound()
         return ResponseJSON(body=table_instance.insert(info))
 
     def update(self, table: str, identifier: int, info: TableInfoDict):
-        table_instance = self.tables[table]
-        if not table_instance:
+        table_instance = self.tables.get(table)
+        if table_instance is None:
             raise NotFound()
         return ResponseJSON(body=table_instance.update(identifier, info))
 
     def delete(self, table: str, identifier: int):
-        table_instance = self.tables[table]
-        if not table_instance:
+        table_instance = self.tables.get(table)
+        if table_instance is None:
             raise NotFound()
         return ResponseJSON(body=table_instance.delete(identifier))

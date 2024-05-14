@@ -58,6 +58,10 @@ class Table(ABC, Generic[TableInfoDict, TableInfoTransformedDict, TableRowDict])
         sql = f'INSERT INTO {self.table} ({properties}) VALUES ({values_fragment}) RETURNING {all_properties}'
 
         result = con.execute(sql, values).fetchone()
+
+        if isinstance(result.get('id'), int):
+            self._insert_after(con, result['id'], info)
+
         return result if result else self._get_zero_row()
 
     def update(self, identifier: int, info: TableInfoDict) -> TableRowDict | None:
@@ -74,14 +78,19 @@ class Table(ABC, Generic[TableInfoDict, TableInfoTransformedDict, TableRowDict])
 
         return con.execute(sql, values).fetchone()
 
-    def delete(self, identifier: int) -> None | TableRowDict:
-        sql = f'DELETE FROM {self.table} WHERE {self._id}=%s RETURNING {self._get_all_properties()}'
-
+    def delete(self, identifier: int) -> None | TableInfoTransformedDict:
         with self._db.get_connection() as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(sql, [identifier])
-                result = cursor.fetchone()
-                return result if result else self._get_zero_row()
+            self.delete_with_con(connection, identifier)
+
+    def delete_with_con(self, con: Connection, identifier: int) -> None | TableInfoTransformedDict:
+        sql = f'DELETE FROM {self.table} WHERE {self._id}=%s RETURNING {self._get_all_properties()}'
+        self._delete_before(con, identifier)
+        result = con.execute(sql, [identifier]).fetchone()
+
+        if result is not None:
+            self._delete_after(con, result)
+
+        return result
 
     def _get_properties(self) -> str:
         return ', '.join(self._properties)
@@ -126,14 +135,23 @@ class Table(ABC, Generic[TableInfoDict, TableInfoTransformedDict, TableRowDict])
     def _insert_before(self, con: Connection, info: TableInfoDict) -> TableInfoTransformedDict:
         raise StorageException('Abstract method!!!')
 
+    def _insert_after(self, con: Connection, identifier: int, info: TableInfoDict):
+        return
+
     @abstractmethod
     def _update_before(self, con: Connection, identifier: int, info: TableInfoDict) -> TableInfoTransformedDict:
         raise StorageException('Abstract method!!!')
+
+    def _delete_before(self, con: Connection, identifier: int):
+        return
+
+    def _delete_after(self, con: Connection, row: TableInfoTransformedDict):
+        return
 
     @abstractmethod
     def _get_values(self, info: TableInfoTransformedDict) -> list[Any]:
         raise StorageException('Abstract method!!!')
 
     @abstractmethod
-    def _get_zero_row(self) -> TableRowDict:
+    def _get_zero_row(self) -> TableInfoTransformedDict:
         raise StorageException('Abstract method!!!')

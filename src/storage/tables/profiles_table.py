@@ -7,13 +7,15 @@ from .table import Table
 
 
 class ProfileInfo(TypedDict):
+    owner: int
     email: str | None
     telephone: str | None
     first_name: str
     second_name: str | None
-    skills: list[str]
+    skills: list[str] | None
 
 class ProfileInfoTransformed(TypedDict):
+    owner: int
     contacts: int
     first_name: str
     second_name: str | None
@@ -21,6 +23,7 @@ class ProfileInfoTransformed(TypedDict):
 
 class ProfileRow(TypedDict):
     id: int
+    owner: int
     contacts: int
     first_name: str
     second_name: str | None
@@ -28,11 +31,11 @@ class ProfileRow(TypedDict):
 
 class ProfilesTable(Table[ProfileInfo, ProfileInfoTransformed, ProfileRow]):
     table = 'profiles'
-    _properties = ['contacts', 'first_name', 'second_name', 'skills']
+    _properties = ['owner', 'contacts', 'first_name', 'second_name', 'skills']
     _id = 'id'
 
     def __init__(self, core: StorageCore, contacts: ContactsTable):
-        self._db = core
+        super().__init__(core)
         self.contacts = contacts
 
     def _get_join_fragment(self) -> str:
@@ -46,11 +49,18 @@ class ProfilesTable(Table[ProfileInfo, ProfileInfoTransformed, ProfileRow]):
             con,
             ContactInfo(email=info['email'], telephone=info['telephone'])
         )
+
+        skills = info['skills']
+
+        if skills is None:
+            skills = []
+
         return ProfileInfoTransformed(
             contacts=contact['id'],
+            owner=info['owner'],
             first_name=info['first_name'],
             second_name=info['second_name'],
-            skills=info['skills']
+            skills=skills
         )
 
     def _update_before(self, con: Connection, identifier: int, info: ProfileInfo) -> ProfileInfoTransformed:
@@ -65,15 +75,24 @@ class ProfilesTable(Table[ProfileInfo, ProfileInfoTransformed, ProfileRow]):
             ContactInfo(email=info['email'], telephone=info['telephone'])
         )
 
+        skills = info['skills']
+
+        if skills is None:
+            skills = []
+
         return ProfileInfoTransformed(
+            owner=info['owner'],
             contacts=profile['contacts'],
             first_name=info['first_name'],
             second_name=info['second_name'],
-            skills=info['skills']
+            skills=skills
         )
 
-    def _get_values(self, info: ProfileInfoTransformed) -> list[Any]:
-        return [info['contacts'], info['first_name'], info['second_name'], info['skills']]
+    def _delete_after(self, con: Connection, row: ProfileInfoTransformed):
+        self.contacts.delete_with_con(con, row['contacts'])
 
-    def _get_zero_row(self) -> ProfileRow:
-        return ProfileRow(id = 0, contacts=0, first_name='not found', second_name=None, skills=[])
+    def _get_values(self, info: ProfileInfoTransformed) -> list[Any]:
+        return [info['owner'], info['contacts'], info['first_name'], info['second_name'], info['skills']]
+
+    def _get_zero_row(self) -> ProfileInfoTransformed:
+        return ProfileInfoTransformed(owner=0, contacts=0, first_name='not found', second_name=None, skills=[])

@@ -8,29 +8,30 @@ CREATE TABLE contacts (
 	telephone text NULL
 );
 
-CREATE TABLE profiles (
-	id SERIAL PRIMARY KEY,
-	contacts integer REFERENCES contacts ON DELETE RESTRICT,
-	first_name text,
-	second_name text NULL,
-	skills text[]
-);
-
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
-	profile integer REFERENCES profiles ON DELETE RESTRICT,
 	is_customer boolean
 );
 
 CREATE TABLE sessions (
 	id SERIAL PRIMARY KEY,
-	owner integer REFERENCES users ON DELETE RESTRICT,
+	owner integer REFERENCES users ON DELETE CASCADE,
 	key text
+);
+
+CREATE TABLE profiles (
+	id SERIAL PRIMARY KEY,
+	contacts integer REFERENCES contacts ON DELETE RESTRICT,
+	owner integer REFERENCES users ON DELETE RESTRICT,
+	-- CASCADE don't work
+	first_name text,
+	second_name text NULL,
+	skills text[]
 );
 
 CREATE TABLE companies (
 	id SERIAL PRIMARY KEY,
-	owner integer REFERENCES users ON DELETE RESTRICT,
+	owner integer REFERENCES users ON DELETE CASCADE,
 	contacts integer REFERENCES contacts ON DELETE RESTRICT,
 	name text,
 	description text
@@ -52,12 +53,12 @@ CREATE TABLE orders (
 CREATE TABLE chats (
 	id SERIAL PRIMARY KEY,
 	performer integer REFERENCES users ON DELETE RESTRICT,
-	order_link integer REFERENCES orders ON DELETE RESTRICT
+	order_link integer REFERENCES orders ON DELETE CASCADE
 );
 
 CREATE TABLE messages (
 	id SERIAL PRIMARY KEY,
-	chat integer REFERENCES chats ON DELETE RESTRICT,
+	chat integer REFERENCES chats ON DELETE CASCADE,
 	owner integer REFERENCES users ON DELETE RESTRICT,
 	date timestamp,
 	value text

@@ -25,5 +25,5 @@ class ContactsTable(Table[ContactInfo, ContactInfo, ContactRow]):
     def _get_values(self, info: ContactInfo) -> list[Any]:
         return [info['email'], info['telephone']]
 
-    def _get_zero_row(self) -> ContactRow:
-        return ContactRow(id = 0, email=None, telephone=None)
+    def _get_zero_row(self) -> ContactInfo:
+        return ContactInfo(email=None, telephone=None)

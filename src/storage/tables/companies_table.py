@@ -33,7 +33,7 @@ class CompaniesTable(Table[CompaniesInfo, CompaniesInfoTransformed, CompaniesRow
     _id = 'id'
 
     def __init__(self, core: StorageCore, contacts: ContactsTable):
-        self.db = core
+        super().__init__(core)
         self.contacts = contacts
 
     def _get_join_fragment(self) -> str:
@@ -73,12 +73,14 @@ class CompaniesTable(Table[CompaniesInfo, CompaniesInfoTransformed, CompaniesRow
             description=info['description']
         )
 
+    def _delete_after(self, con: Connection, row: CompaniesInfoTransformed):
+        self.contacts.delete_with_con(con, row['contacts'])
+
     def _get_values(self, info: CompaniesInfoTransformed) -> list[Any]:
         return [info['owner'], info['contacts'], info['name'], info['description']]
 
-    def _get_zero_row(self) -> CompaniesRow:
-        return CompaniesRow(
-            id=0,
+    def _get_zero_row(self) -> CompaniesInfoTransformed:
+        return CompaniesInfoTransformed(
             owner=0,
             contacts=0,
             name='Not Found',

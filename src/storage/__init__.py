@@ -13,6 +13,7 @@ class Storage:
     _companies: CompaniesTable
     _sessions: SessionsTable
     _orders: OrdersTable
+    _users: UsersTable
 
     def __init__(self, connection_url: str):
         core = StorageCore(connection_url)
@@ -21,11 +22,15 @@ class Storage:
         self._sessions = SessionsTable(core)
         companies = CompaniesTable(core, contacts)
         profiles = ProfilesTable(core, contacts)
-        users = UsersTable(core, profiles, companies, requests)
+        users = UsersTable(core, profiles)
         self._orders = OrdersTable(core, requests, users)
         self._contacts = contacts
         self._profiles = profiles
         self._companies = companies
+        self._users = users
+
+    def get_users_table(self):
+        return self._users
 
     def get_contacts_table(self):
         return self._contacts
