@@ -1,12 +1,15 @@
-from performer import Performer
-from order import Order
+from typing import TypeVar, Generic
+from .performer import Performer
 
 
-class Request:
+OrderClone = TypeVar('OrderClone')
+
+
+class Request(Generic[OrderClone]):
     _id: int | None
     _performer: int | Performer
-    _order: int | Order
+    _order: int | OrderClone
 
 
-    def __init__(self):
+    def __init__(self, order: OrderClone):
         pass

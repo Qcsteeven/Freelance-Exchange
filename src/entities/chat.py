@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from datetime import datetime
 from multipledispatch import dispatch
-from customer import Customer
-from performer import Performer
-from order import Order
+from typing import TypeVar, Generic
 
+OrderClone = TypeVar('OrderClone')
+CustomerClone = TypeVar('CustomerClone')
+PerformerClone = TypeVar('PerformerClone')
 
 @dataclass
 class Message:
@@ -15,29 +16,29 @@ class Message:
     _owner: int
 
 
-class Chat:
+class Chat(Generic[OrderClone, CustomerClone, PerformerClone]):
     _id: int | None
     _message: str
 
-    def __init__(self):
+    def __init__(self, order: OrderClone, cus: CustomerClone, per: PerformerClone):
         pass
 
-    def get_order(self) -> Order:
+    def get_order(self) -> OrderClone:
         pass
 
     def get_messages(self) -> list[Message]:
         pass
 
-    def get_customer(self) -> Customer:
+    def get_customer(self) -> CustomerClone:
         pass
 
-    def get_performer(self) -> Performer:
+    def get_performer(self) -> PerformerClone:
         pass
 
-    @dispatch(Performer, Message)
-    def send_message(self, per: Performer, msg: Message):
+    @dispatch(PerformerClone, Message)
+    def send_message(self, per: PerformerClone, msg: Message):
         pass
 
-    @dispatch(Customer, Message)
-    def send_message(self, cus: Customer, msg: Message):
+    @dispatch(CustomerClone, Message)
+    def send_message(self, cus: CustomerClone, msg: Message):
         pass

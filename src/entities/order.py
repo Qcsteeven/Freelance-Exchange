@@ -1,16 +1,18 @@
 from enum import Enum
 from datetime import datetime
 from dataclasses import dataclass
-from customer import Customer
-from request import Request
-from company import Company
-from chat import Chat
-from base import DataBaseStatus
+from typing import TypeVar, Generic, Any, Callable
+from .request import Request
+from .company import Company
+from .chat import Chat
+from .base import DataBaseStatus
+
+CustomerClone = TypeVar('CustomerClone')
 
 @dataclass
 class OrderOptions:
     title: str
-    customer: Customer
+    customer: CustomerClone
     descriptions: str
 
 class OrderStatus(Enum):
@@ -18,12 +20,12 @@ class OrderStatus(Enum):
     PROCESS = 'PROCESS'
     CLOSE = 'CLOSE'
 
-class Order:
+class Order(Generic[CustomerClone]):
     _db_status: DataBaseStatus
     _title: str
     _descriptions: str
     _id: int | None
-    _customer: int | Customer
+    _customer: int | CustomerClone
     _performer: int | None
     _status: OrderStatus
     _create: datetime
@@ -33,9 +35,10 @@ class Order:
     _technology_stack: list[str]
     _chat: Chat | None
     _chats: list[Chat]
+    save: Callable[[Any]]
 
 
-    def __init__(self):
+    def __init__(self, cus : CustomerClone):
         pass
 
     def create(self, options: OrderOptions):
@@ -45,30 +48,31 @@ class Order:
         self._db_status = DataBaseStatus.NEW
 
     def close(self):
-        pass
+        self._status = OrderStatus.CLOSE
+        self._db_status = DataBaseStatus.UPDATED
+        self.save(self)
 
     def delete(self):
-        pass
+        self._status = OrderStatus.CLOSE
+        self.save(self)
 
     def get_all_request(self) -> list[Request]:
-        pass
+        self.save(self)
 
     def select_request(self, req: Request):
-        pass
+        self.save(self)
 
     def get_status(self):
-        pass
+        self.save(self)
 
     def get_customer(self):
-        pass
+        self.save(self)
 
     def get_company(self) -> Company:
-        pass
+        self.save(self)
 
     def change_title(self):
-        pass
+        self.save(self)
 
     def change_description(self):
-        pass
-
-    # TODO: Create "change" methods
+        self.save(self)
