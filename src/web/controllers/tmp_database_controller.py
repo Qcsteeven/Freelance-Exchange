@@ -15,7 +15,10 @@ class TmpDatabaseController:
             'users': storage.get_users_table(),
             'contacts': storage.get_contacts_table(),
             'profiles': storage.get_profiles_table(),
-            'companies': storage.get_companies_table()
+            'companies': storage.get_companies_table(),
+            'sessions': storage.get_session_table(),
+            'requests': storage.get_request_table(),
+            'orders': storage.get_order_table()
         }
 
     def select_one(self, table: str, identifier: int):

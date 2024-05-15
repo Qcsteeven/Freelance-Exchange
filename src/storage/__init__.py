@@ -14,20 +14,28 @@ class Storage:
     _sessions: SessionsTable
     _orders: OrdersTable
     _users: UsersTable
+    _requests: RequestsTable
 
     def __init__(self, connection_url: str):
         core = StorageCore(connection_url)
-        requests = RequestsTable(core)
         contacts = ContactsTable(core)
-        self._sessions = SessionsTable(core)
-        companies = CompaniesTable(core, contacts)
         profiles = ProfilesTable(core, contacts)
-        users = UsersTable(core, profiles)
-        self._orders = OrdersTable(core, requests, users)
+        self._companies = CompaniesTable(core, contacts)
+        self._users = UsersTable(core, profiles)
+        self._sessions = SessionsTable(core)
+        self._requests = RequestsTable(core)
+        self._orders = OrdersTable(core)
         self._contacts = contacts
         self._profiles = profiles
-        self._companies = companies
-        self._users = users
+
+    def get_request_table(self):
+        return self._requests
+
+    def get_session_table(self):
+        return self._sessions
+
+    def get_order_table(self):
+        return self._orders
 
     def get_users_table(self):
         return self._users

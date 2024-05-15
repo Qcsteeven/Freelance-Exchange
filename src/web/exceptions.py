@@ -14,3 +14,8 @@ class NotFound(ResponseException):
 class BadRequest(ResponseException):
     code = HTTPStatus.BAD_REQUEST
     message = 'Bad Request'
+
+class Redirect(ResponseException):
+    code = HTTPStatus.FOUND
+    message = 'Redirect'
+    location: str
