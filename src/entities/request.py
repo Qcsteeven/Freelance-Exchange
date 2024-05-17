@@ -1,10 +1,15 @@
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Callable, Any, Type
 from .performer import Performer
 from .base import DataBaseStatus
-from typing import Callable, Any
 
 
 OrderClone = TypeVar('OrderClone')
+
+
+class SMRequest:
+    id: int | None
+    performer: int | Performer
+    order: int | OrderClone
 
 
 class Request(Generic[OrderClone]):
@@ -14,17 +19,21 @@ class Request(Generic[OrderClone]):
     _order: int | OrderClone
     save: Callable[[Any]]
 
-    def __init__(self, order: OrderClone):
+    def __init__(self, order: Type[OrderClone]):
         pass
 
-    def create(self, order: OrderClone, per: Performer):
-        self._order = order
-        self._performer = Performer
+    def create(self, req: SMRequest):
+        self.make(req)
         self._db_status = DataBaseStatus.NEW
         self.save(self)
+        self._db_status = DataBaseStatus.STATIC
+
+    def make(self, req: SMRequest):
+        self._id = req.id
+        self._performer = req.performer
+        self._order = req.order
 
     def get_performer(self) -> Performer:
-        self._db_status = DataBaseStatus.STATIC
         self.save(self)
         return self._performer
 
@@ -36,3 +45,9 @@ class Request(Generic[OrderClone]):
     def delete(self):
         self._db_status = DataBaseStatus.DELETE
         self.save(self)
+
+    def get_db_status(self) -> DataBaseStatus:
+        return self._db_status
+
+    def set_db_status(self, status: DataBaseStatus):
+        self._db_status = status

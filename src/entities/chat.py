@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from multipledispatch import dispatch
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Any, Callable, Type
 from .base import DataBaseStatus
 
 
@@ -18,6 +17,15 @@ class Message:
     chat: int
     owner: int
 
+@dataclass
+class SMChat:
+    id: int | None
+    message: str
+    order: OrderClone
+    customer: CustomerClone
+    performer: PerformerClone
+    messages: list[Message]
+
 
 class Chat(Generic[OrderClone, CustomerClone, PerformerClone]):
     _db_status: DataBaseStatus
@@ -27,38 +35,44 @@ class Chat(Generic[OrderClone, CustomerClone, PerformerClone]):
     _customer: CustomerClone
     _performer: PerformerClone
     _messages: list[Message]
+    save: Callable[[Any]]
 
-    def __init__(self, order: OrderClone, cus: CustomerClone, per: PerformerClone):
+    def __init__(self, order: Type[OrderClone], cus: Type[CustomerClone], per: Type[PerformerClone]):
+        pass
+
+    def create(self, chat: SMChat):
+        self.make(chat)
         self._db_status = DataBaseStatus.NEW
-        self._order = order
-        self._customer = cus
-        self._performer = per
-        self._messages = []
+        self.save(self)
+        self._db_status = DataBaseStatus.STATIC
+
+    def make(self, chat: SMChat):
+        self._id = chat.id
+        self._message = chat.message
+        self._order = chat.order
+        self._customer = chat.customer
+        self._performer = chat.performer
+        self._messages = chat.messages
 
     def get_order(self) -> OrderClone:
-        self._db_status = DataBaseStatus.STATIC
         return self._order
 
     def get_messages(self) -> list[Message]:
-        self._db_status = DataBaseStatus.STATIC
         return self._messages
 
     def get_customer(self) -> CustomerClone:
-        self._db_status = DataBaseStatus.STATIC
         return self._customer
 
     def get_performer(self) -> PerformerClone:
-        self._db_status = DataBaseStatus.STATIC
         return self._performer
 
-    @dispatch(PerformerClone, Message)
-    def send_message(self, per: PerformerClone, msg: Message):
-        msg.owner = per
+    def send_message(self, user: PerformerClone | CustomerClone, msg: Message):
+        msg.owner = user
         self._messages.append(msg)
         self._db_status = DataBaseStatus.UPDATED
-        
-    @dispatch(CustomerClone, Message)
-    def send_message(self, cus: CustomerClone, msg: Message):
-        msg.owner = cus
-        self._messages.append(msg)
-        self._db_status = DataBaseStatus.UPDATED
+
+    def get_db_status(self) -> DataBaseStatus:
+        return self._db_status
+
+    def set_db_status(self, status: DataBaseStatus):
+        self._db_status = status
