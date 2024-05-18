@@ -40,12 +40,12 @@ CREATE TABLE companies (
 
 CREATE TABLE orders (
 	id SERIAL PRIMARY KEY,
-	customer integer REFERENCES users ON DELETE RESTRICT,
-	performer integer REFERENCES users ON DELETE RESTRICT,
+	customer integer REFERENCES users ON DELETE SET NULL,
+	performer integer REFERENCES users ON DELETE SET NULL,
 	status text,
-	create_date timestamp,
-	start_date timestamp NULL,
-	close_date timestamp NULL,
+	create_date text,
+	start_date text NULL,
+	close_date text NULL,
 	category text,
 	description text,
 	technology_stack text[]
@@ -55,7 +55,7 @@ CREATE TABLE requests (
 	id SERIAL PRIMARY KEY,
 	performer integer REFERENCES users ON DELETE CASCADE,
 	order_link integer REFERENCES orders ON DELETE CASCADE
-)
+);
 
 CREATE TABLE chats (
 	id SERIAL PRIMARY KEY,

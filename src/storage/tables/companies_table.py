@@ -37,7 +37,7 @@ class CompaniesTable(Table[CompaniesInfo, CompaniesInfoTransformed, CompaniesRow
         self.contacts = contacts
 
     def _get_join_fragment(self) -> str:
-        return f'LEFT JOIN {self.contacts.table} ON {self.table}.id={self.contacts.table}.contacts'
+        return f'LEFT JOIN {self.contacts.table} ON {self.table}.id={self.contacts.table}.id'
 
     def _get_join_properties(self) -> str:
         return f'{self.contacts.table}.email email, {self.contacts.table}.telephone telephone'

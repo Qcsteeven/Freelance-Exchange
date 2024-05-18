@@ -1,5 +1,5 @@
 from typing import TypedDict, Any
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from psycopg import Connection
 from .table import Table
 
@@ -7,9 +7,9 @@ class OrderInfo(TypedDict):
     customer: int
     performer: int | None
     status: str
-    create_date: float | None
-    start_date: float | None
-    close_date: float | None
+    create_date: str | None
+    start_date: str | None
+    close_date: str | None
     category: str
     description: str
     technology_stack: list[str]
@@ -18,9 +18,9 @@ class OrderInfoTransformed(TypedDict):
     customer: int
     performer: int | None
     status: str
-    create_date: float
-    start_date: float | None
-    close_date: float | None
+    create_date: str
+    start_date: str | None
+    close_date: str | None
     category: str
     description: str
     technology_stack: list[str]
@@ -29,9 +29,9 @@ class OrderRow(TypedDict):
     customer: int
     performer: int | None
     status: str
-    create_date: float
-    start_date: float | None
-    close_date: float | None
+    create_date: str
+    start_date: str | None
+    close_date: str | None
     category: str
     description: str
     technology_stack: list[str]
@@ -47,7 +47,8 @@ class OrdersTable(Table[OrderInfo, OrderInfoTransformed, OrderRow]):
     def _insert_before(self, con: Connection, info: OrderInfo) -> OrderInfoTransformed:
         create_date = info['create_date']
         if create_date is None:
-            create_date = datetime.now().timestamp()
+            now = datetime.now(timezone.utc) + timedelta(hours=3)
+            create_date = now.strftime('%Y-%m-%d %H:%M:%S+03')
 
         return OrderInfoTransformed(
             customer=info['customer'],

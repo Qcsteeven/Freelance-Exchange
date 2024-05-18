@@ -74,7 +74,7 @@ class Table(ABC, Generic[TableInfoDict, TableInfoTransformedDict, TableRowDict])
         values = self._get_values(info_transformed)
         values.append(identifier)
         set_fragment = self._get_set_fragment()
-        sql = f'UPDATE {self.table} SET {set_fragment} RETURNING {self._get_all_properties()}'
+        sql = f'UPDATE {self.table} SET {set_fragment} WHERE {self._id}=%s RETURNING {self._get_all_properties()}'
 
         return con.execute(sql, values).fetchone()
 
