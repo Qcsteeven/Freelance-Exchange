@@ -9,7 +9,7 @@ services:
     image: postgres:13-alpine
     restart: 'no'
     volumes:
-      - ${DATABASE_PATH}:/database
+      - ${DB_PATH}:/database
       - ./data/reserve:/reserve
     environment:
       POSTGRES_USER: ${DB_USER}

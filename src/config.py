@@ -10,6 +10,10 @@ class Config:
     _db_user: str
     _db_password: str
     _db_name: str
+
+    _email_login: str
+    _email_password: str
+
     _server_port: int
 
     def __init__(self):
@@ -31,15 +35,21 @@ class Config:
             self._db_user = os.environ.get('DB_USER').strip()
             self._db_password = os.environ.get('DB_PASSWORD').strip()
             self._db_name = os.environ.get('DB_NAME').strip()
+
+            self._email_login = os.environ.get('EMAIL_LOGIN').strip()
+            self._email_password = os.environ.get('EMAIL_PASSWORD').strip()
+
             self._server_port = int(os.environ.get('SERVER_PORT'))
 
             properties = [
                 not self._db_host, not self._db_port, not self._db_user,
-                not self._db_password, not self._db_name, self._server_port
+                not self._db_password, not self._db_name, self._server_port,
+                not self._email_login, not self._email_password
             ]
 
             if True in properties:
                 raise ConfigParseException()
+
         except (ConfigParseException, ValueError, TypeError) as e:
             raise ConfigParseException(
                 'Invalid .env file. It is necessary to fix errors and unspecified environment variables.'
@@ -50,3 +60,9 @@ class Config:
 
     def get_server_port(self):
         return self._server_port
+
+    def get_email_login(self):
+        return self._email_login
+
+    def get_email_password(self):
+        return self._email_password

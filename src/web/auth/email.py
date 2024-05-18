@@ -1,17 +1,16 @@
-from smtplib import SMTP
+from smtplib import SMTP_SSL
 from secrets import choice
 from email.mime.text import MIMEText
 from .exceptions import EmailException
 
 
 class Email:
-    server: SMTP
+    server: SMTP_SSL
     email: str
 
     def __init__(self, email: str, password: str):
         self.email = email
-        self.server = SMTP('smtp.gmail.com', 587)
-        self.server.starttls()
+        self.server = SMTP_SSL('smtp.mail.ru', 465)
         self.server.login(email, password)
 
     def send_code(self, email: str) -> str:
