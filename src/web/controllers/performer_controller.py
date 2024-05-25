@@ -1,3 +1,8 @@
+from storage import Storage
+
+
 class PerformerController:
-    def __init__(self):
-        pass
+    storage: Storage
+
+    def __init__(self, storage: Storage):
+        self.storage = storage

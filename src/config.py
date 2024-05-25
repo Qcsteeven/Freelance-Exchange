@@ -5,7 +5,6 @@ class ConfigParseException(Exception):
     "Config Parse Exception"
 
 class Config:
-
     _db_host: str
     _db_port: int
     _db_user: str

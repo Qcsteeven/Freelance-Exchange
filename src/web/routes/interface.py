@@ -1,7 +1,7 @@
 from typing import TypeVar, Generic
 from re import Match, Pattern
 from abc import ABC, abstractmethod
-from .controllers.interfaces import Response
+from web.controllers import ResponseHTML, ResponseJSON
 
 
 Request = TypeVar('Request')
@@ -11,7 +11,7 @@ class SimpleRoute(ABC, Generic[Request]):
     methods: list[str]
 
     @abstractmethod
-    def handle(self, req: Request) -> Response:
+    def handle(self, req: Request, method: str) -> ResponseHTML | ResponseJSON:
         pass
 
 class RegexpRoute(ABC, Generic[Request]):
@@ -19,5 +19,5 @@ class RegexpRoute(ABC, Generic[Request]):
     methods: list[str]
 
     @abstractmethod
-    def handle(self, req: Request, match: Match) -> Response:
+    def handle(self, req: Request, match: Match, method: str) -> ResponseHTML | ResponseJSON:
         pass

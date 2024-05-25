@@ -12,11 +12,10 @@ services:
       - ${DATABASE_PATH}:/database
       - ./data/reserve:/docker-entrypoint-initdb.d/
     environment:
-      POSTGRES_INITDB_ARGS: -E UTF8
       TZ: UTC-8
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /database
-      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+      POSTGRES_INITDB_ARGS: -E UTF8 --auth-host=scram-sha-256
       POSTGRES_HOST_AUTH_METHOD: scram-sha-256
 

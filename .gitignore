@@ -1,12 +1,16 @@
 # configs and scripts
 config/database
-package.json
 .env
 .idea
 src/tmp.py
+report
 # Чувствительные данные
 data/reserve
 data/database
 # Кеш
 **/__pycache__
 .venv
+.mypy_cache
+node_modules
+# Костыли
+*_old.py
