@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="" />
+    <!-- TODO: add href -->
+    <link rel="stylesheet" href="/style/main.scss" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ page_title }} | devproject</title>
+  </head>
+  <body>
+    <div class="win middle-orders">
+      <div class="middle-orders">
+        <div class="middle-order-box">
+          <div class="middle-order">
+            <span class="middle-order-title">Веб-разработка с использованием портала сертификации Blockchain</span>
+
+            <div class="middle-order-sub-title-line">
+              <div class="middle-order-price">1000 руб</div>
+              <span class="middle-order-price-type">Ежечасная оплата</span>
+            </div>
+
+            <div class="middle-order-description">Мы ищем опытного веб-разработчика для создания веб-сайта с удобным порталом. Основной функционал позволит пользовател...</div>
+            
+            <div class="middle-order-skills">
+              <span class="middle-order-skills__item">JavaScrip</span>
+              <span class="middle-order-skills__item">TypeScript</span>
+              <span class="middle-order-skills__item">PHP</span>
+              <span class="middle-order-skills__item">Блокчейн-архитектура</span>
+              <span class="middle-order-skills__item">Веб-разработка</span>
+            </div>
+
+            <div class="middle-order-bottom">
+              <a class="middle-order-button button _green" href="/">Узнать больше</a>
+
+              <div class="middle-order-time">20.05.2024</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="middle-order-box">
+          <div class="middle-order">
+            <span class="middle-order-title">{{ title }}</span>
+
+            <div class="middle-order-sub-title-line">
+              <div class="middle-order-price">{{ price }}</div>
+              <span class="middle-order-price-type">{{ price_type }}</span>
+            </div>
+
+            <div class="middle-order-description">{{ description }}</div>
+            
+            <div class="middle-order-skills">
+              <span class="middle-order-skills__item">JavaScrip</span>
+              <span class="middle-order-skills__item">TypeScript</span>
+              <span class="middle-order-skills__item">PHP</span>
+              <span class="middle-order-skills__item">Блокчейн-архитектура</span>
+              <span class="middle-order-skills__item">Веб-разработка</span>
+            </div>
+
+            <div class="middle-order-bottom">
+              <a class="middle-order-button button _green" href="/">Узнать больше</a>
+
+              <div class="middle-order-time">{{ date }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

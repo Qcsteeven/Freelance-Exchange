@@ -55,29 +55,7 @@
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
-  .auth-bottoms__items {
-    padding: 4px 15px;
-    border-radius: 3px;
-    box-shadow: 1px 1px 5px -2px black;
-    font-size: 14px;
-    font-weight: 700;
-    color: #fff;
-    text-transform: uppercase;
-    &._signup {
-      background-color: #2957b9;
-      transition: background-color .5s ease;
-      &:hover {
-        background-color: #3067dd;
-      }
-    }
-    &._login {
-      background-color: #08963e;
-      transition: background-color .5s ease;
-      &:hover {
-        background-color: #0dad4a;
-      }
-    }
-  }
+
   @media (max-width: 350px) {
     flex-direction: column-reverse;
     .auth-bottoms__items {

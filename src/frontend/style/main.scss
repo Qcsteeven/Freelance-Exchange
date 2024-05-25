@@ -1,25 +1,40 @@
 @import url(null.scss);
-@import url(auth.scss);
+@import url(middle-order.scss);
 
 .win {
   width: 1300px;
   margin: 0 auto;
-}
 
-@media (max-width: 1500px) {
-  .win {
+  @media (max-width: 1500px) {
     width: 800px;
   }
-}
-@media (max-width: 1000px) {
-  .win {
+  @media (max-width: 1000px) {
     width: 580px;
+  }
+  @media (max-width: 600px) {
+    width: 100%;
+    padding: 0 10px;
   }
 }
 
-@media (max-width: 600px) {
-  .win {
-    width: 100%;
-    padding: 0 10px;
+.button {
+  padding: 7px 20px;
+  border-radius: 50vh;
+  font-size: 14px;
+  color: #fff;
+  transition: background-color .2s ease;
+
+  &._green {
+    background-color: #108A00;
+    &:hover {
+      background-color: #14ad00;
+    }
+  }
+
+  &._blue {
+    background-color: #2957b9;
+    &:hover {
+      background-color: #3067dd;
+    }
   }
 }

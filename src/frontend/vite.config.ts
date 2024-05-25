@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 
 const pages = {
   main: './index.html',
+  orders: './orders.html',
+
   auth: './auth.html',
   login: './auth/login.html',
   signup: './auth/signup.html',
