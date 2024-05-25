@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="" />
+    <!-- TODO: add href -->
+    <link rel="stylesheet" href="/style/main.scss" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Войти | devproject</title>
+  </head>
+  <body>
+    <div class="win">
+      <div class="vertical-center">
+        <form action="/auth/login" method="POST" class="auth-container">
+          <h1 class="auth-title">Авторизация</h1>
+
+          <div class="auth-error" id="error">
+            <span class="auth-error-title">Ошибка авторизации</span>
+            <span class="auth-error-text">Проверьте что все данные введены корректно.</span>
+          </div>
+
+          <label class="auth-input-line" for="email">
+            <span class="auth-input-line-span">Почта</span>
+            <input name="email" class="primary-input" id="email" type="email" required />
+          </label>
+          
+          <label class="auth-input-line" for="password">
+            <span class="auth-input-line-span">Пароль</span>
+            <input name="password" class="primary-input" id="password" type="password" required />
+          </label>
+          
+          <div class="auth-bottoms">
+            <a class="auth-bottoms__items _signup" href="/auth/signup">Зарегистрироваться</a>
+
+            <button class="auth-bottoms__items _login" type="submit">Войти</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,122 @@
+
+
+
+//--- COLOR ---//
+
+$color-1: #000000;
+$color-2: #ffffff;
+
+
+
+//--- SIZE AND TIMES ---//
+
+//
+
+
+
+//--- MIXIN ---//
+
+@mixin pos-center() {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%)
+}
+
+@mixin pos-top() {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0);
+}
+
+@mixin pos-bottom() {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, 0);
+}
+
+@mixin flex-center() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin box-shadow($size, $hex, $w: 1px, $h: 1px) {
+  $value: ();
+  @for $i from 1 through $size {
+    $value: $value, ($i * $w) ($i * $h) 1px $hex;
+  }
+  box-shadow: $value;
+}
+
+@mixin text-shadow($size, $hex, $w: 1px, $h: 1px) {
+  $value: ();
+  @for $i from 1 through $size {
+    $value: $value, ($i * $w) ($i * $h) 0.5px $hex;
+  }
+  text-shadow: $value;
+}
+
+
+
+//--- ZERO ---//
+
+html, body {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+nav, header, footer, aside {
+  display: block;
+}
+*:focus, *:active {
+  outline: none;
+}
+a:focus, a:active {
+  outline: none;
+}
+input, button, textarea {
+  font-family: inherit;
+}
+input::-ms-clear {
+  display: none;
+}
+button {
+  cursor: pointer;
+  border: 0;
+}
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+a, a:visited {
+  text-decoration-line: none;
+}
+a:hover {
+  text-decoration-line: none;
+}
+ul li {
+  list-style: none;
+}
+img {
+  vertical-align: top;
+}
+html {
+  font-size: 10px;
+}
+body {
+  background-color: #ffffff;
+  font-size: 16px;
+}
+*, *:before, *:after {
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-decoration-line: none;
+}

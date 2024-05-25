@@ -1,0 +1,25 @@
+@import url(null.scss);
+@import url(auth.scss);
+
+.win {
+  width: 1300px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1500px) {
+  .win {
+    width: 800px;
+  }
+}
+@media (max-width: 1000px) {
+  .win {
+    width: 580px;
+  }
+}
+
+@media (max-width: 600px) {
+  .win {
+    width: 100%;
+    padding: 0 10px;
+  }
+}

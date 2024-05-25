@@ -1,0 +1,137 @@
+.vertical-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  height: 100%;
+  padding: 20px 0;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 400px;
+  font-size: 18px;
+  padding: 7px;
+  border-radius: 10px;
+  margin: 0 auto;
+  box-shadow: 1px 1px 5px -2px black;
+}
+
+.auth-title {
+  display: block;
+  padding-bottom: 6px;
+  margin: 0 -7px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+
+  font-size: 22px;
+  color: rgb(85, 85, 85);
+  text-align: center;
+}
+
+.auth-input-line {
+  display: block;
+  &:not(:last-child) {
+    margin-bottom: 13px;
+  }
+}
+
+.auth-input-line-span {
+  display: block;
+  min-width: 70px;
+  margin-bottom: 3px;
+}
+
+.primary-input {
+  width: 100%;
+  border: none;
+  font-size: 18px;
+  border-radius: 3px;
+  box-shadow: inset 1px 1px 5px -3px black;
+  padding: 2px 5px;
+}
+
+.auth-bottoms {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  .auth-bottoms__items {
+    padding: 4px 15px;
+    border-radius: 3px;
+    box-shadow: 1px 1px 5px -2px black;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    &._signup {
+      background-color: #2957b9;
+      transition: background-color .5s ease;
+      &:hover {
+        background-color: #3067dd;
+      }
+    }
+    &._login {
+      background-color: #08963e;
+      transition: background-color .5s ease;
+      &:hover {
+        background-color: #0dad4a;
+      }
+    }
+  }
+  @media (max-width: 350px) {
+    flex-direction: column-reverse;
+    .auth-bottoms__items {
+      text-align: center;
+      &:not(:first-child) {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.auth-error {
+  display: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+
+  background-color: #810000;
+  color: #ffffff;
+
+  &:target {
+    display: block;
+  }
+  .auth-error-title {
+    display: block;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .auth-error-text {
+    display: block;
+    font-size: 16px;
+  }
+}
+
+.login-link {
+  position: relative;
+  display: block;
+  width: max-content;
+  padding: 3px;
+  color: #333;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    
+    display: block;
+    width: 0%;
+    height: 1.5px;
+    background-color: #a5a5a5;
+    transition: width .2s ease;
+  }
+  &:hover::before {
+    width: 100%;
+  }
+}

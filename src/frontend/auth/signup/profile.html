@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="" />
+  <!-- TODO: add href -->
+  <link rel="stylesheet" href="/style/main.scss" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Введите ваши данные | devproject</title>
+</head>
+<body>
+  <div class="win">
+    <div class="vertical-center">
+      <form action="/auth/signup" method="POST" class="auth-container">
+        <h1 class="auth-title">Введите ваши данные</h1>
+
+        <div class="auth-error" id="error">
+          <span class="auth-error-title">Ошибка</span>
+          <span class="auth-error-text">{{ reason_text }}</span>
+        </div>
+
+        <label class="auth-input-line" for="email">
+          <span class="auth-input-line-span">Почта {{ email }}</span>
+        </label>
+
+        <label class="auth-input-line" for="first-name">
+          <span class="auth-input-line-span">Имя</span>
+          <input name="first-name" class="primary-input" id="first-name" type="text" required />
+        </label>
+
+        <label class="auth-input-line" for="second_name">
+          <span class="auth-input-line-span">Фамилия (опционально)</span>
+          <input name="second_name" class="primary-input" id="second_name" type="text" />
+        </label>
+
+        <label class="auth-input-line" for="password">
+          <span class="auth-input-line-span">Пароль</span>
+          <input name="password" class="primary-input" id="password" type="password" required />
+        </label>
+
+        <label class="auth-input-line" for="repeat-password">
+          <span class="auth-input-line-span">Повторите пароль</span>
+          <input name="repeat-password" class="primary-input" id="repeat-password" type="password" required />
+        </label>
+
+        <label class="auth-input-line" for="user">
+          <span class="auth-input-line-span">Вы регистрируетесь как</span>
+          <select class="primary-input" name="user" id="user" required>
+            <option value="">Не выбрано</option>
+            <option value="customer">Заказчик</option>
+            <option value="performer">Исполнитель</option>
+          </select>
+        </label>
+
+        <div class="auth-bottoms">
+          <button class="auth-bottoms__items _signup" type="submit">Отправить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

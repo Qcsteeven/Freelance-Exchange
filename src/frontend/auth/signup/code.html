@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="" />
+  <!-- TODO: add href -->
+  <link rel="stylesheet" href="/style/main.scss" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Введите код | devproject</title>
+</head>
+<body>
+  <div class="win">
+    <div class="vertical-center">
+      <form action="/auth/signup/profile" method="POST" class="auth-container">
+        <h1 class="auth-title">Введите код</h1>
+
+        <input name="code" class="primary-input" type="number" required />
+
+        <div class="auth-bottoms">
+          <button class="auth-bottoms__items _signup" type="submit">Отправить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
