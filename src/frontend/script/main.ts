@@ -20,4 +20,3 @@ if (burgerDiv) {
     document.body.classList.toggle('_lock');
   })
 }
-

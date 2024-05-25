@@ -1,5 +1,6 @@
 .middle-orders {
   display: flex;
+  flex-wrap: wrap;
   margin: 0 -10px;
 
   @media (max-width: 1000px) {

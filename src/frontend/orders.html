@@ -2,13 +2,60 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="" />
-    <!-- TODO: add href -->
+    <link rel="icon" type="image/x-icon" href="/public/icon.ico" />
     <link rel="stylesheet" href="/style/main.scss" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ page_title }} | devproject</title>
   </head>
   <body>
+    <header class="header">
+      <div class="header-inner win">
+        <a class="header-logo" href="/">
+          <img class="header-logo-img" src="/public/logo.svg" alt="devproject logo">
+        </a>
+
+        <div class="header-content">
+          <ul class="header-content-links">
+            <li class="header-content-links__item">
+              <a class="header-content-links__item-link" href="/">Back-end</a>
+            </li>
+            <li class="header-content-links__item">
+              <a class="header-content-links__item-link" href="/">Front-end</a>
+            </li>
+            <li class="header-content-links__item">
+              <a class="header-content-links__item-link" href="/">SEO</a>
+            </li>
+            <li class="header-content-links__item">
+              <a class="header-content-links__item-link" href="/">AI</a>
+            </li>
+            <li class="header-content-links__item">
+              <a class="header-content-links__item-link" href="/">CMS</a>
+            </li>
+          </ul>
+
+          <div class="header-user">
+            <div class="header-user-icon">
+              <img class="header-user-icon-img" src="/public/user.svg" alt="user logo">
+            </div>
+
+            <div class="header-user-menu-box">
+              <div class="header-user-menu">
+                <a class="header-user-menu__item" href="/profile">Профиль</a>
+                <a class="header-user-menu__item" href="/orders">Заказы</a>
+                <a class="header-user-menu__item _exit" href="/logout">Выйти</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="burger">
+          <div class="burger__line"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="header-ghost"></div>
+
     <div class="win middle-orders">
       <div class="middle-orders">
         <div class="middle-order-box">
@@ -66,5 +113,7 @@
         </div>
       </div>
     </div>
+
+    <script type="module" src="/script/main.ts"></script>
   </body>
 </html>
